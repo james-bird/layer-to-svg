@@ -21,13 +21,20 @@ try:
 except ValueError:
 	print("No background")
 for counter in range(len(listoflayers)):
+	lname = listoflayers[counter]
+	if len( lname ) == 1:
+		lname = 'char_' + str(ord( lname ))
 	james=listoflayers[:]
 	temp_tree = copy.deepcopy(tree)
 	del james[counter]
-	print(james)
 	temp_root = temp_tree.getroot()
 	for g in temp_root.findall('{http://www.w3.org/2000/svg}g'):
 		name = g.get('{http://www.inkscape.org/namespaces/inkscape}label')
 		if name in james:
 			temp_root.remove(g)
-	temp_tree.write(os.path.join(export_folder,listoflayers[counter]+'.svg'))
+		else:
+			style = g.get('style')
+			if type(style) is str:
+				style = style.replace( 'display:none', 'display:inline' )
+				g.set('style', style)
+	temp_tree.write( os.path.join( export_folder, lname +'.svg' ) )
