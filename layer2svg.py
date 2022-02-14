@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python
 import xml.etree.ElementTree as ET
 import os
 import copy
@@ -13,13 +13,17 @@ for g in root.findall('{http://www.w3.org/2000/svg}g'):
 	listoflayers.append(name)
 print(listoflayers)
 
+
 if not os.path.exists(export_folder):
 	os.makedirs(export_folder)
 
-try:
-	listoflayers.remove('background')
-except ValueError:
+# remove background layers
+background_layers = [l for l in listoflayers if "background" in l]
+if len(background_layers) == 0:
 	print("No background")
+for layer in background_layers:
+	listoflayers.remove(layer)
+
 for counter in range(len(listoflayers)):
 	lname = listoflayers[counter]
 	if len( lname ) == 1:
